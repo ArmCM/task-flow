@@ -1,0 +1,17 @@
+{
+    "name": "arm-cm/api-task-flow",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "ArmCm\\ApiTaskFlow\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Armando",
+            "email": "ackurtcobain15@gmail.com"
+        }
+    ],
+    "require": {}
+}
