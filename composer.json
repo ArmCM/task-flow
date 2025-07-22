@@ -2,16 +2,28 @@
     "name": "arm-cm/api-task-flow",
     "type": "project",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Armando",
+            "email": "acalderon.root@gmail.com"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "ArmCm\\ApiTaskFlow\\": "src/"
         }
     },
-    "authors": [
-        {
-            "name": "Armando",
-            "email": "ackurtcobain15@gmail.com"
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
         }
-    ],
-    "require": {}
+    },
+    "require": {
+        "php": "^8.3",
+        "illuminate/collections": "^12.20"
+    },
+    "require-dev": {
+        "psy/psysh": "^0.12.9",
+        "phpunit/phpunit": "^12.2"
+    },
 }
