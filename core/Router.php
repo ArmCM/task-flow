@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use App\Exceptions\RouterException;
+
 class Router {
     protected array $routes = [];
 
@@ -45,7 +47,7 @@ class Router {
         $route = $this->findRoute($uri, strtoupper($method));
 
         if (!$route) {
-            throw new \Exception("Route not found for [$method] $uri");
+            throw new RouterException("Route not found for [$method] $uri", Response::NOT_FOUND);
         }
 
         return $this->dispatch($route['controller']);

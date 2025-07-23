@@ -3,7 +3,10 @@
 namespace Core;
 
 class Response {
-    const int NOT_FOUND = 404;
-    const int FORBIDDEN = 403;
     const int HTTP_OK = 200;
+    const int HTTP_CREATED = 201;
+    const int HTTP_NO_CONTENT = 204;
+    const int HTTP_UNAUTHORIZED = 401;
+    const int FORBIDDEN = 403;
+    const int NOT_FOUND = 404;
 }

@@ -15,7 +15,6 @@ trait ApiResponses
             'message' => $message,
             'data' => $data['data'] ?? $data,
             'options' => $options,
-            'status_code' => $statusCode,
         ];
 
         if ($this->hasPagination($data)) {
@@ -35,7 +34,6 @@ trait ApiResponses
     {
         $response = [
             'status' => 'error',
-            'status_code' => $statusCode,
             'message' => $message,
         ];
 
@@ -53,12 +51,12 @@ trait ApiResponses
 
     protected function created(string $message, array $data = []): void
     {
-        $this->success($message, $data, 201);
+        $this->success($message, $data, Response::HTTP_CREATED);
     }
 
     protected function noContent(): void
     {
-        http_response_code(204);
+        http_response_code(Response::HTTP_NO_CONTENT);
         exit;
     }
 
@@ -94,9 +92,6 @@ trait ApiResponses
 
     protected function json(array $data, int $statusCode = 200): void
     {
-        http_response_code($statusCode);
-        header('Content-Type: application/json');
-        echo json_encode($data);
-        exit;
+        jsonEncode($data, $statusCode);
     }
 }
