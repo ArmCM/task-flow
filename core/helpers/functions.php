@@ -24,3 +24,8 @@ function jsonEncode(string|array $data, int $status, ?array $options = []): void
     echo json_encode($payload);
     exit;
 }
+
+function basePath($path): string
+{
+    return BASE_PATH . $path;
+}

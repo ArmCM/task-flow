@@ -9,6 +9,8 @@ require BASE_PATH . './vendor/autoload.php';
 
 require BASE_PATH . 'core/helpers/functions.php';
 
+require BASE_PATH . 'bootstrap/app.php';
+
 $router = new Router();
 
 $routes = require BASE_PATH . 'routes/api.php';

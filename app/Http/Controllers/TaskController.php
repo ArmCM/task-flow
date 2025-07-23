@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Traits\ApiResponses;
+use Core\App;
+use Core\Database;
 
 class TaskController
 {
@@ -10,6 +12,10 @@ class TaskController
 
     public function index()
     {
-        $this->ok('hello', ['name' => 'armando']);
+        $db = App::resolve(Database::class);
+
+        $tasks = $db->query("SELECT * FROM taskflow.tasks")->fetchAll();
+
+        $this->ok('hello', $tasks);
     }
 }
