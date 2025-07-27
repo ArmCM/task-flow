@@ -9,4 +9,5 @@ class Response {
     const int HTTP_UNAUTHORIZED = 401;
     const int FORBIDDEN = 403;
     const int NOT_FOUND = 404;
+    const int INTERNAL_SERVER_ERROR = 500;
 }

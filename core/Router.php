@@ -50,13 +50,23 @@ class Router {
             throw new RouterException("Route not found for [$method] $uri", Response::NOT_FOUND);
         }
 
-        return $this->dispatch($route['controller']);
+        return $this->dispatch($route['controller'], $route['params'] ?? []);
     }
 
     protected function findRoute(string $uri, string $method): ?array
     {
         foreach ($this->routes as $route) {
-            if ($route['uri'] === $uri && $route['method'] === $method) {
+            if ($method !== $route['method']) {
+                continue;
+            }
+
+            $pattern = preg_replace('#\{[^/]+\}#', '([^/]+)', $route['uri']);
+            $pattern = '#^' . $pattern . '$#';
+
+            if (preg_match($pattern, $uri, $matches)) {
+                array_shift($matches);
+
+                $route['params'] = $matches;
                 return $route;
             }
         }
@@ -64,15 +74,16 @@ class Router {
         return null;
     }
 
-    protected function dispatch(callable|array $controller): mixed
+    protected function dispatch(callable|array $controller, array $params = []): mixed
     {
-        if (is_array($controller)) {
-            [$class, $method] = $controller;
-            $instance = new $class;
+        [$class, $method] = $controller;
 
-            return $instance->$method();
+        if (!class_exists($class) || !method_exists($class, $method)) {
+            throw new RouterException("Controller or method not found", Response::INTERNAL_SERVER_ERROR);
         }
 
-        return call_user_func($controller);
+        $instance = new $class;
+
+        return call_user_func_array([$instance, $method], $params);
     }
 }
