@@ -18,6 +18,9 @@ $routes = require BASE_PATH . 'routes/api.php';
 $uri = getUri();
 
 $method = getRequestMethod();
+if (in_array($_SERVER['REQUEST_METHOD'], ['PATCH', 'PUT', 'DELETE'])) {
+    parse_str(file_get_contents("php://input"), $_POST);
+}
 
 try {
     $router->route($uri, $method);

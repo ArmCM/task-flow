@@ -43,17 +43,25 @@ class TaskController
         $this->ok('id', $task);
     }
 
-    public function edit()
+    public function edit($id)
     {
-        
+
     }
 
-    public function update()
+    public function update($id)
     {
-        
+        $db = App::resolve(Database::class);
+
+        $db->query("UPDATE taskflow.tasks SET taskflow.tasks.title = :title, taskflow.tasks.description = :description  WHERE taskflow.tasks.id = :id", [
+            ':id' => $id,
+            ':title' => $_POST['title'],
+            ':description' => $_POST['description'],
+        ])->fetch();
+
+        $this->ok('id');
     }
 
-    public function destroy()
+    public function destroy($id)
     {
 
     }
