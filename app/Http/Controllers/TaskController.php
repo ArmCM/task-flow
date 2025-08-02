@@ -63,6 +63,10 @@ class TaskController
 
     public function destroy($id)
     {
+        $db = App::resolve(Database::class);
 
+        $db->query("DELETE FROM taskflow.tasks WHERE id = :id", [
+            ':id' => $id,
+        ]);
     }
 }
