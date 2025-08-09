@@ -6,7 +6,7 @@ use Core\Database;
 
 $container = new Container();
 
-$container->bind('Core\Database', function () {
+$container->singleton('Core\Database', function () {
 
     $config = require basePath('config/database.php');
 
