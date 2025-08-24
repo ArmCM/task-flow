@@ -60,11 +60,20 @@ class TaskController
     public function update($id)
     {
         $db = App::resolve(Database::class);
+        $request = App::resolve(Request::class);
 
-        $db->query("UPDATE taskflow.tasks SET taskflow.tasks.title = :title, taskflow.tasks.description = :description  WHERE taskflow.tasks.id = :id", [
+        $db->query("
+            UPDATE taskflow.tasks 
+            SET taskflow.tasks.title = :title,
+                taskflow.tasks.description = :description,
+                taskflow.tasks.state_id = :state_id,
+                taskflow.tasks.expiration_date = :expiration_date
+            WHERE taskflow.tasks.id = :id", [
             ':id' => $id,
-            ':title' => $_POST['title'],
-            ':description' => $_POST['description'],
+            ':title' => $request->json()['title'],
+            ':description' => $request->json()['description'],
+            ':state_id' => $request->json()['state_id'],
+            ':expiration_date' => Carbon::parse($request->json()['expiration_date'])->format('Y-m-d'),
         ])->fetch();
 
         $this->ok('id');

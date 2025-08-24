@@ -5,13 +5,12 @@ namespace Core;
 
 final class Request
 {
-    private array $params = [];
-
     public function __construct(
         private array $server,
         private array $get,
         private array $post,
         private array $inputJson,
+        private array $files,
     ){}
 
     public static function capture(): self
