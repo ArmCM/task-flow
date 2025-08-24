@@ -15,8 +15,12 @@ class TaskController
     public function index()
     {
         $db = App::resolve(Database::class);
+        $request = App::resolve(Request::class);
 
-        $tasks = $db->query("SELECT * FROM taskflow.tasks")->fetchAll();
+        $where = "";
+        $orderBy = "ORDER BY created_at DESC";
+
+        $tasks = $db->query("SELECT * FROM taskflow.tasks {$where} {$orderBy}")->fetchAll();
 
         $this->ok('Tasks fetched successfully', $tasks);
     }
