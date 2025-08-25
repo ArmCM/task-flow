@@ -45,4 +45,13 @@ final class Request
     {
         return $this->inputJson;
     }
+
+    public function params($param = null): array|string
+    {
+        if (notEmpty($param)) {
+            return $this->get[$param] ?? [];
+        }
+
+        return $this->get;
+    }
 }

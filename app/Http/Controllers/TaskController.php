@@ -17,10 +17,56 @@ class TaskController
         $db = App::resolve(Database::class);
         $request = App::resolve(Request::class);
 
+        $params = [];
+        $conditions = [];
+
+        if (notEmpty($request->params('title'))) {
+            $conditions[] = "title = :title";
+            $params[':title'] = $request->params('title');
+        }
+
+        if (notEmpty($request->params('description'))) {
+            $conditions[] = "description = :description";
+            $params[':description'] = $request->params('description');
+        }
+
+        if (notEmpty($request->params('expiration_date'))) {
+            $conditions[] = "DATE(expiration_date) = :expiration_date";
+            $params[':expiration_date'] = $request->params('expiration_date');
+        }
+
+        if (notEmpty($request->params('status'))) {
+
+            $statusId = $db->query("SELECT taskflow.states.id FROM taskflow.states WHERE taskflow.states.name = :name", [
+                ':name' => $request->params('status')
+            ])->fetch();
+
+            $conditions[] = "state_id = :state_id";
+            $params[':state_id'] = $statusId['id'];
+        }
+
         $where = "";
+
+        if (!empty($conditions)) {
+            $where = "WHERE " . implode(" AND ", $conditions);
+        }
+
         $orderBy = "ORDER BY created_at DESC";
 
-        $tasks = $db->query("SELECT * FROM taskflow.tasks {$where} {$orderBy}")->fetchAll();
+        if (!empty($request->params('sort'))) {
+            $sort = strtolower($request->params('sort'));
+            if ($sort === "asc") {
+                $orderBy = "ORDER BY created_at ASC";
+            }
+
+            if ($sort === "desc") {
+                $orderBy = "ORDER BY created_at DESC";
+            }
+        }
+
+        $sql = "SELECT * FROM taskflow.tasks {$where} {$orderBy}";
+
+        $tasks = $db->query($sql, $params)->fetchAll();
 
         $this->ok('Tasks fetched successfully', $tasks);
     }
