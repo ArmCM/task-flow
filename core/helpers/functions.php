@@ -1,10 +1,5 @@
 <?php
 
-function getUri()
-{
-    return parse_url($_SERVER['REQUEST_URI'])['path'];
-}
-
 function getRequestMethod(): string
 {
     return $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
@@ -28,4 +23,9 @@ function jsonEncode(string|array $data, int $status, ?array $options = []): void
 function basePath($path): string
 {
     return BASE_PATH . $path;
+}
+
+function notEmpty($value): bool
+{
+    return !empty($value);
 }
