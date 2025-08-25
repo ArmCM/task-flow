@@ -36,13 +36,8 @@ class TaskController
         }
 
         if (notEmpty($request->params('status'))) {
-
-            $statusId = $db->query("SELECT taskflow.states.id FROM taskflow.states WHERE taskflow.states.name = :name", [
-                ':name' => $request->params('status')
-            ])->fetch();
-
-            $conditions[] = "state_id = :state_id";
-            $params[':state_id'] = $statusId['id'];
+            $conditions[] = "status = :status";
+            $params[':status'] = $request->params('status');
         }
 
         $where = "";
@@ -80,10 +75,9 @@ class TaskController
     {
         $request = App::resolve(Request::class);
 
-        App::resolve(Database::class)->query('INSERT INTO taskflow.tasks(title, description, state_id, expiration_date, created_at) VALUES (:title, :description, :state_id, :expiration_date, :created_at)', [
+        App::resolve(Database::class)->query('INSERT INTO taskflow.tasks(title, description, expiration_date, created_at) VALUES (:title, :description, :expiration_date, :created_at)', [
             ':title' => $request->json()['title'],
             ':description' => $request->json()['description'],
-            ':state_id' => 1,
             ':expiration_date' => Carbon::parse($request->json()['expiration_date'])->format('Y-m-d H:i:s'),
             ':created_at' => Carbon::now()->toDateTimeString()
         ]);
@@ -116,14 +110,16 @@ class TaskController
             UPDATE taskflow.tasks 
             SET taskflow.tasks.title = :title,
                 taskflow.tasks.description = :description,
-                taskflow.tasks.state_id = :state_id,
-                taskflow.tasks.expiration_date = :expiration_date
+                taskflow.tasks.status = :status,
+                taskflow.tasks.expiration_date = :expiration_date,
+                taskflow.tasks.updated_at = :updated_at
             WHERE taskflow.tasks.id = :id", [
             ':id' => $id,
             ':title' => $request->json()['title'],
             ':description' => $request->json()['description'],
-            ':state_id' => $request->json()['state_id'],
+            ':status' => $request->json()['status'],
             ':expiration_date' => Carbon::parse($request->json()['expiration_date'])->format('Y-m-d'),
+            ':updated_at' => Carbon::now()->toDateTimeString()
         ])->fetch();
 
         $this->ok('id');
