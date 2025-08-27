@@ -15,11 +15,12 @@ trait ApiResponses
             'message' => $message,
         ];
 
-        if ($this->hasData($data)) {
+        if (notEmpty($data)) {
             $this->response['data'] = $data;
         }
 
         if ($this->hasPagination($data)) {
+            $this->response['data'] = $data['data'];
             $this->response['meta'] = $data['meta'];
             $this->response['links'] = $data['links'];
         }
@@ -29,12 +30,7 @@ trait ApiResponses
 
     protected function hasPagination(array $data): bool
     {
-        return isset($data['links'], $data['meta']);
-    }
-
-    protected function hasData(array $data): bool
-    {
-        return isset($data['data']);
+        return isset($data['data'], $data['links'], $data['meta']);
     }
 
     protected function ok(string $message = 'success', array $data = []): void

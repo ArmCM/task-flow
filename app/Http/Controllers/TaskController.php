@@ -28,11 +28,6 @@ class TaskController
 
         $this->ok('Tasks fetched successfully', $tasks);
     }
-    
-    public function create()
-    {
-
-    }
 
     public function store()
     {
@@ -48,11 +43,6 @@ class TaskController
         $task = (new Task)->find($id);
 
         $this->ok('find resource', $task);
-    }
-
-    public function edit($id)
-    {
-
     }
 
     public function update($id)
