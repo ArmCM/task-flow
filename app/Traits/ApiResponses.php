@@ -8,14 +8,16 @@ trait ApiResponses
 {
     protected array $response = [];
 
-    protected function success(string $message, array $data = [], int $statusCode = 200, array $options = []): void
+    protected function success(string $message, array $data = [], int $statusCode = 200): void
     {
         $this->response = [
             'status' => 'success',
             'message' => $message,
-            'data' => $data['data'] ?? $data,
-            'options' => $options,
         ];
+
+        if ($this->hasData($data)) {
+            $this->response['data'] = $data;
+        }
 
         if ($this->hasPagination($data)) {
             $this->response['meta'] = $data['meta'];
@@ -28,6 +30,26 @@ trait ApiResponses
     protected function hasPagination(array $data): bool
     {
         return isset($data['links'], $data['meta']);
+    }
+
+    protected function hasData(array $data): bool
+    {
+        return isset($data['data']);
+    }
+
+    protected function ok(string $message = 'success', array $data = []): void
+    {
+        $this->success($message, $data, Response::HTTP_OK);
+    }
+
+    protected function created(string $message = 'created', array $data = []): void
+    {
+        $this->success($message, $data, Response::HTTP_CREATED);
+    }
+
+    protected function noContent(string $message = 'no content', array $data = []): void
+    {
+        $this->success($message, $data, Response::HTTP_NO_CONTENT);
     }
 
     protected function error(int $statusCode, string $message, array|null $errors = null): void
@@ -44,54 +66,38 @@ trait ApiResponses
         $this->json($response, $statusCode);
     }
 
-    protected function ok(string $message, array $data = []): void
-    {
-        $this->success($message, $data, Response::HTTP_OK);
-    }
-
-    protected function created(string $message, array $data = []): void
-    {
-        $this->success($message, $data, Response::HTTP_CREATED);
-    }
-
-    protected function noContent(): void
-    {
-        http_response_code(Response::HTTP_NO_CONTENT);
-        exit;
-    }
-
     protected function badRequest(string $message): void
     {
         $this->error(400, $message);
     }
 
-    protected function unauthorized(string $message = 'Acceso no autorizado'): void
+    protected function unauthorized(string $message = 'Unauthorized access'): void
     {
         $this->error(401, $message);
     }
 
-    protected function forbidden(string $message = 'Acceso denegado'): void
+    protected function forbidden(string $message = 'Access denied'): void
     {
         $this->error(403, $message);
     }
 
-    protected function notFound(string $message = 'Recurso no encontrado'): void
+    protected function notFound(string $message = 'Resource not found'): void
     {
         $this->error(404, $message);
     }
 
-    protected function unprocessableEntity(array $errors, string $message = 'Datos no válidos'): void
+    protected function unprocessableEntity(array $errors, string $message = 'Invalid data'): void
     {
         $this->error(422, $message, $errors);
     }
 
-    protected function internalServerError(string $message = 'Error interno del servidor'): void
+    protected function internalServerError(string $message = 'Internal server error'): void
     {
         $this->error(500, $message);
     }
 
-    protected function json(array $data, int $statusCode = 200): void
+    protected function json(array $data, int $statusCode = 200)
     {
-        jsonEncode($data, $statusCode);
+        return Response::json($data, $statusCode);
     }
 }
