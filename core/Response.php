@@ -10,4 +10,13 @@ class Response {
     const int FORBIDDEN = 403;
     const int NOT_FOUND = 404;
     const int INTERNAL_SERVER_ERROR = 500;
+
+    public static function json(array $data, int $status = 200)
+    {
+        http_response_code($status);
+        header('Content-Type: application/json');
+
+        echo json_encode($data);
+        exit;
+    }
 }

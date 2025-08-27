@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
 use App\Traits\ApiResponses;
-use Carbon\Carbon;
 use Core\App;
-use Core\Database;
 use Core\Request;
 
 class TaskController
@@ -14,123 +13,57 @@ class TaskController
 
     public function index()
     {
-        $db = App::resolve(Database::class);
         $request = App::resolve(Request::class);
 
-        $params = [];
-        $conditions = [];
+        $filters = [
+            'title' => $request->params('title'),
+            'description' => $request->params('description'),
+            'expiration_date' => $request->params('expiration_date'),
+            'status' => $request->params('status'),
+            'page' => $request->params('page'),
+            'per_page' => $request->params('per_page'),
+        ];
 
-        if (notEmpty($request->params('title'))) {
-            $conditions[] = "title = :title";
-            $params[':title'] = $request->params('title');
-        }
-
-        if (notEmpty($request->params('description'))) {
-            $conditions[] = "description = :description";
-            $params[':description'] = $request->params('description');
-        }
-
-        if (notEmpty($request->params('expiration_date'))) {
-            $conditions[] = "DATE(expiration_date) = :expiration_date";
-            $params[':expiration_date'] = $request->params('expiration_date');
-        }
-
-        if (notEmpty($request->params('status'))) {
-            $conditions[] = "status = :status";
-            $params[':status'] = $request->params('status');
-        }
-
-        $where = "";
-
-        if (!empty($conditions)) {
-            $where = "WHERE " . implode(" AND ", $conditions);
-        }
-
-        $orderBy = "ORDER BY created_at DESC";
-
-        if (!empty($request->params('sort'))) {
-            $sort = strtolower($request->params('sort'));
-            if ($sort === "asc") {
-                $orderBy = "ORDER BY created_at ASC";
-            }
-
-            if ($sort === "desc") {
-                $orderBy = "ORDER BY created_at DESC";
-            }
-        }
-
-        $sql = "SELECT * FROM taskflow.tasks {$where} {$orderBy}";
-
-        $tasks = $db->query($sql, $params)->fetchAll();
+        $tasks = (new Task)->paginate($filters, $request->params('sort'));
 
         $this->ok('Tasks fetched successfully', $tasks);
-    }
-    
-    public function create()
-    {
-
     }
 
     public function store()
     {
         $request = App::resolve(Request::class);
 
-        App::resolve(Database::class)->query('INSERT INTO taskflow.tasks(title, description, expiration_date, created_at) VALUES (:title, :description, :expiration_date, :created_at)', [
-            ':title' => $request->json()['title'],
-            ':description' => $request->json()['description'],
-            ':expiration_date' => Carbon::parse($request->json()['expiration_date'])->format('Y-m-d H:i:s'),
-            ':created_at' => Carbon::now()->toDateTimeString()
-        ]);
+        (new Task)->store($request->json());
 
         $this->created('Task created successfully');
     }
 
     public function show($id)
     {
-        $db = App::resolve(Database::class);
+        $task = (new Task)->find($id);
 
-        $task = $db->query("SELECT * FROM taskflow.tasks WHERE taskflow.tasks.id = :id", [
-            ':id' => $id,
-        ])->fetch();
-
-        $this->ok('id', $task);
-    }
-
-    public function edit($id)
-    {
-
+        $this->ok('find resource', $task);
     }
 
     public function update($id)
     {
-        $db = App::resolve(Database::class);
         $request = App::resolve(Request::class);
 
-        $db->query("
-            UPDATE taskflow.tasks 
-            SET taskflow.tasks.title = :title,
-                taskflow.tasks.description = :description,
-                taskflow.tasks.status = :status,
-                taskflow.tasks.expiration_date = :expiration_date,
-                taskflow.tasks.updated_at = :updated_at
-            WHERE taskflow.tasks.id = :id", [
-            ':id' => $id,
-            ':title' => $request->json()['title'],
-            ':description' => $request->json()['description'],
-            ':status' => $request->json()['status'],
-            ':expiration_date' => Carbon::parse($request->json()['expiration_date'])->format('Y-m-d'),
-            ':updated_at' => Carbon::now()->toDateTimeString()
-        ])->fetch();
+        (new Task)->update($id, $request->json());
 
-        $this->ok('id');
+        $this->ok();
     }
 
     public function destroy($id)
     {
-        $db = App::resolve(Database::class);
+        $task = (new Task)->find($id);
 
-        $db->query("DELETE FROM taskflow.tasks WHERE id = :id", [
-            ':id' => $id,
-        ]);
+        if (!$task) {
+            $this->notFound();
+        }
+
+        (new Task)->delete($id);
+
+        $this->noContent();
     }
 }

@@ -3,6 +3,6 @@
 return [
     'host' => 'localhost',
     'port' => 3306,
-    'database' => 'task_flow',
+    'dbname' => 'taskflow',
     'charset' => 'utf8mb4',
 ];

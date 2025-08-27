@@ -36,11 +36,6 @@ final class Request
         return strtoupper($this->server['REQUEST_METHOD'] ?? 'GET');
     }
 
-//    public function getRequestMethod(): string
-//    {
-//        return $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
-//    }
-
     public function json(): array
     {
         return $this->inputJson;
@@ -49,7 +44,7 @@ final class Request
     public function params($param = null): array|string
     {
         if (notEmpty($param)) {
-            return $this->get[$param] ?? [];
+            return $this->get[$param] ?? '';
         }
 
         return $this->get;
