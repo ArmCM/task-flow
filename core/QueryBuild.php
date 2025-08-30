@@ -69,7 +69,13 @@ class QueryBuild
 
         $sql = "SELECT * FROM {$this->table} {$where} {$this->orderBy}";
 
-        return $this->database->query($sql, $this->params)->fetch();
+        $rowAffected = $this->database->query($sql, $this->params)->fetch();
+
+        if (!$rowAffected) {
+            throw new \Exception("Resource not found", Response::NOT_FOUND);
+        }
+
+        return $rowAffected;
     }
 
     public function delete()
@@ -78,7 +84,13 @@ class QueryBuild
 
         $sql = "DELETE FROM {$this->table} {$where}";
 
-        return $this->database->query($sql, $this->params)->fetch();
+        $rowAffected = $this->database->query($sql, $this->params)->rowCount();
+
+        if ($rowAffected === 0) {
+            throw new \Exception("Resource not found", Response::NOT_FOUND);
+        }
+
+        return $rowAffected;
     }
 
     public function update($params, array $values)

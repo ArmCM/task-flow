@@ -56,12 +56,6 @@ class TaskController
 
     public function destroy($id)
     {
-        $task = (new Task)->find($id);
-
-        if (!$task) {
-            $this->notFound();
-        }
-
         (new Task)->delete($id);
 
         $this->noContent();

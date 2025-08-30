@@ -49,4 +49,9 @@ final class Request
 
         return $this->get;
     }
+
+    public function authorizationHeader(): string
+    {
+        return $this->server['HTTP_AUTHORIZATION'] ??= '';
+    }
 }

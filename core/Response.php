@@ -13,12 +13,14 @@ class Response {
     const int UNPROCESSABLE_CONTENT  = 422;
     const int INTERNAL_SERVER_ERROR = 500;
 
-    public static function json(array $data, int $status = 200)
+    public static function json(array|string $data, int $status = 200)
     {
         http_response_code($status);
         header('Content-Type: application/json');
-
-        echo json_encode($data);
+        echo json_encode([
+            'error' => $data,
+            'message' => $status,
+        ]);
         exit;
     }
 }

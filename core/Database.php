@@ -36,4 +36,9 @@ class Database
     {
         return $this->statement->fetchAll();
     }
+
+    public function rowCount(): int
+    {
+        return $this->statement->rowCount();
+    }
 }

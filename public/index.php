@@ -3,6 +3,7 @@
 use App\Exceptions\RouterException;
 use Core\App;
 use Core\Request;
+use Core\Response;
 use Core\Router;
 
 const BASE_PATH = __DIR__ . '/../';
@@ -21,6 +22,6 @@ $request = App::resolve(Request::class);
 
 try {
     $router->route($request->path(), $request->method());
-} catch (RouterException $exception) {
-    jsonEncode(data: $exception->getMessage(), status: $exception->getCode());
+} catch (RouterException|Exception $exception) {
+    Response::json(data: $exception->getMessage(), status: $exception->getCode());
 }
