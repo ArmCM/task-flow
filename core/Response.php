@@ -16,11 +16,14 @@ class Response {
     public static function json(array|string $data, int $status = 200)
     {
         http_response_code($status);
+
         header('Content-Type: application/json');
+
         echo json_encode([
             'error' => $data,
             'message' => $status,
         ]);
+
         exit;
     }
 }
