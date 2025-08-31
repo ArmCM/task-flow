@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRegisterRequest;
 use App\Models\User;
 use App\Traits\ApiResponses;
 use Core\App;
@@ -15,7 +16,9 @@ class UserRegisterController
     {
         $request = App::resolve(Request::class);
 
-        (new User)->store($request->json());
+        $validatedRequest = UserRegisterRequest::validate($request->json());
+
+        (new User)->store($validatedRequest);
 
         $this->ok('user registered successfully');
     }
