@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TaskStoreRequest;
 use App\Models\Task;
 use App\Traits\ApiResponses;
 use Core\App;
@@ -33,7 +34,9 @@ class TaskController
     {
         $request = App::resolve(Request::class);
 
-        (new Task)->store($request->json());
+        $requestValidated = TaskStoreRequest::validate($request->json());
+
+        (new Task)->store($requestValidated);
 
         $this->created('Task created successfully');
     }
