@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Middlewares\AuthMiddleware;
-use App\Http\Middlewares\Middleware;
 use Core\App;
+use Core\Middleware;
 use Core\Request;
 use Core\Response;
 use Core\Router;

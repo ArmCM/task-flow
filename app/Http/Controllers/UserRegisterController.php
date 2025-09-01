@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRegisterRequest;
 use App\Models\User;
-use App\Traits\ApiResponses;
 use Core\App;
 use Core\Request;
+use Core\Traits\ApiResponses;
 
 class UserRegisterController
 {

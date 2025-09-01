@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Http\Middlewares;
+namespace Core;
 
-use App\Contracts\MiddlewareInterface;
-use Core\Request;
-use Core\Response;
+use Core\Contracts\MiddlewareInterface;
 
 class Middleware
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts;
+namespace Core\Contracts;
 
 use Core\Request;
 use Core\Response;

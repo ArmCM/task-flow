@@ -2,7 +2,7 @@
 
 namespace Core;
 
-use App\Traits\ApiResponses;
+use Core\Traits\ApiResponses;
 
 abstract class FormRequest
 {

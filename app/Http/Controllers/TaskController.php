@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TaskStoreRequest;
 use App\Http\Requests\TaskUpdateRequest;
 use App\Models\Task;
-use App\Traits\ApiResponses;
 use Core\App;
 use Core\Request;
+use Core\Traits\ApiResponses;
 
 class TaskController
 {

@@ -2,10 +2,10 @@
 
 namespace App\Http\Middlewares;
 
-use App\Contracts\MiddlewareInterface;
-use App\Traits\ApiResponses;
-use Core\Response;
+use Core\Contracts\MiddlewareInterface;
 use Core\Request;
+use Core\Response;
+use Core\Traits\ApiResponses;
 
 class AuthMiddleware implements MiddlewareInterface
 {
