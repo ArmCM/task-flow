@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TaskStoreRequest;
+use App\Http\Requests\TaskUpdateRequest;
 use App\Models\Task;
 use App\Traits\ApiResponses;
 use Core\App;
@@ -52,9 +53,11 @@ class TaskController
     {
         $request = App::resolve(Request::class);
 
-        (new Task)->update($id, $request->json());
+        $requestValidated = TaskUpdateRequest::validate($request->json());
 
-        $this->ok();
+        (new Task)->update($id, $requestValidated);
+
+        $this->ok('resource updated');
     }
 
     public function destroy($id)
