@@ -11,8 +11,17 @@ class AuthMiddleware implements MiddlewareInterface
 {
     use ApiResponses;
 
+    private array $except = [
+        '/login',
+        '/register',
+    ];
+
     public function handle(Request $request, callable $next): Response
     {
+        if (in_array($request->path(), $this->except)) {
+            return $next($request);
+        }
+
         $token = $request->authorizationHeader();
 
         if ($token !== 'Bearer secret123') {

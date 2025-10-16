@@ -28,4 +28,11 @@ class User
 
         ]);
     }
+
+    public function find($email, $password)
+    {
+        return $this->query->where('email = :email', [':email' => $email])
+            ->where('password = :password', [':password' => $password])
+            ->get();
+    }
 }
