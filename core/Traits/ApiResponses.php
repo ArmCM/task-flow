@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits;
+namespace Core\Traits;
 
 use Core\Response;
 
@@ -26,11 +26,6 @@ trait ApiResponses
         }
 
         $this->json($this->response, $statusCode);
-    }
-
-    protected function hasPagination(array $data): bool
-    {
-        return isset($data['data'], $data['links'], $data['meta']);
     }
 
     protected function ok(string $message = 'success', array $data = []): void
@@ -64,35 +59,40 @@ trait ApiResponses
 
     protected function badRequest(string $message): void
     {
-        $this->error(400, $message);
+        $this->error(Response::BAD_REQUEST, $message);
     }
 
     protected function unauthorized(string $message = 'Unauthorized access'): void
     {
-        $this->error(401, $message);
+        $this->error(Response::HTTP_UNAUTHORIZED, $message);
     }
 
     protected function forbidden(string $message = 'Access denied'): void
     {
-        $this->error(403, $message);
+        $this->error(Response::FORBIDDEN, $message);
     }
 
     protected function notFound(string $message = 'Resource not found'): void
     {
-        $this->error(404, $message);
+        $this->error(Response::NOT_FOUND, $message);
     }
 
     protected function unprocessableEntity(array $errors, string $message = 'Invalid data'): void
     {
-        $this->error(422, $message, $errors);
+        $this->error(Response::UNPROCESSABLE_CONTENT, $message, $errors);
     }
 
     protected function internalServerError(string $message = 'Internal server error'): void
     {
-        $this->error(500, $message);
+        $this->error(Response::INTERNAL_SERVER_ERROR, $message);
     }
 
-    protected function json(array $data, int $statusCode = 200)
+    protected function hasPagination(array $data): bool
+    {
+        return isset($data['data'], $data['links'], $data['meta']);
+    }
+
+    protected function json(array $data, int $statusCode = 200): null
     {
         return Response::json($data, $statusCode);
     }

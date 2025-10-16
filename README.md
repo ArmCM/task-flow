@@ -12,8 +12,12 @@
 ```bash
 # 1.
 git clone git@github.com:ArmCM/task-flow.git
+```
+```
 cd task-flow
+```
 
+```sql
 # 2 Create database tasks_flow and tables
 
 CREATE DATABASE tasks_flow;
@@ -27,14 +31,17 @@ CREATE TABLE IF NOT EXISTS tasks (
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             );
+```
 
-
+```shell
 # 3.
 composer install
 
 # 4. Start local server
 php -S localhost:8000 -t public/
 ```
+
+---
 
 ### API Reference
 
@@ -47,6 +54,11 @@ GET  localhost:8000/tasks
 query string sort can be asc or desc
 
 GET  localhost:8000/tasks?title=example&description=example&status=pending&expiration_date=2025-04-24&sort=asc
+
+
+# Paginator (can be used with filters)
+
+GET  localhost:8000/tasks?title=example&page=1&per_page=3
 
 # Response
 {
@@ -72,6 +84,18 @@ GET  localhost:8000/tasks?title=example&description=example&status=pending&expir
             "updated_at": "2025-08-25 14:00:16"
         }
     ],
+        "meta": {
+        "current_page": 1,
+        "per_page": 3,
+        "total": 11,
+        "last_page": 4
+    },
+    "links": {
+        "first": "/tasks?page=1&per_page=3",
+        "last": "/tasks?page=4&per_page=3",
+        "prev": null,
+        "next": "/tasks?page=2&per_page=3"
+    }
     "options": []
 }
 ```
@@ -91,8 +115,6 @@ POST  localhost:8000/tasks
 {
     "status": "success",
     "message": "Task created successfully",
-    "data": [],
-    "options": []
 }
 ```
 
@@ -113,7 +135,6 @@ GET  localhost:8000/tasks/{id}
         "created_at": "2025-04-25 13:59:50",
         "updated_at": "2025-08-25 14:13:28"
     },
-    "options": []
 }
 ```
 
@@ -133,7 +154,5 @@ PUT  localhost:8000/tasks/{id}
 {
     "status": "success",
     "message": "",
-    "data": [],
-    "options": []
 }
 ```

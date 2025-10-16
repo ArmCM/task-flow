@@ -1,8 +1,10 @@
 <?php
 
-use App\Exceptions\RouterException;
+use App\Http\Middlewares\AuthMiddleware;
 use Core\App;
+use Core\Middleware;
 use Core\Request;
+use Core\Response;
 use Core\Router;
 
 const BASE_PATH = __DIR__ . '/../';
@@ -19,8 +21,15 @@ $routes = require BASE_PATH . 'routes/api.php';
 
 $request = App::resolve(Request::class);
 
+$middleware = new Middleware();
+$middleware->add(new AuthMiddleware());
+
+$finalResponse = function (Request $request) use ($router): Response {
+    return $router->route($request->path(), $request->method());
+};
+
 try {
-    $router->route($request->path(), $request->method());
-} catch (RouterException $exception) {
-    jsonEncode(data: $exception->getMessage(), status: $exception->getCode());
+    $middleware->process($request, $finalResponse);
+} catch (Exception $exception) {
+    Response::json(data: $exception->getMessage(), status: $exception->getCode());
 }

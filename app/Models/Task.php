@@ -19,7 +19,7 @@ class Task
 
     public function all($filters = null, $sort = null): array
     {
-        $this->applyFilters($filters);
+        $this->applySearchFiltersToQuery($filters);
 
         $sort = $this->sort($sort);
 
@@ -28,7 +28,7 @@ class Task
 
     public function paginate($filters, $sort): array
     {
-        $this->applyFilters($filters);
+        $this->applySearchFiltersToQuery($filters);
 
         $sort = $this->sort($sort);
 
@@ -75,12 +75,12 @@ class Task
         );
     }
 
-    public function delete(int $id)
+    public function delete(int $id): void
     {
         $this->query->where('id = :id', [':id' => $id])->delete();
     }
 
-    protected function applyFilters($filters): void
+    protected function applySearchFiltersToQuery($filters): void
     {
         if (notEmpty($filters['title'])) {
             $this->query->where("title = :title", [':title' => $filters['title']]);
