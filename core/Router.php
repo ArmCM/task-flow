@@ -82,7 +82,7 @@ class Router {
             throw new RouterException("Controller or method not found", Response::INTERNAL_SERVER_ERROR);
         }
 
-        $instance = new $class;
+        $instance = App::resolve($class);
 
         return call_user_func_array([$instance, $method], $params);
     }

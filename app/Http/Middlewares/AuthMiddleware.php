@@ -34,7 +34,10 @@ class AuthMiddleware implements MiddlewareInterface
 
         try {
             $jwt = new Jwt();
-            $jwt->verifyToken($token);
+
+            $decoded = $jwt->verifyToken($token);
+
+            $request->setUser((array) $decoded);
         } catch (Exception $exception) {
             $this->unauthorized($exception->getMessage());
         }

@@ -13,6 +13,7 @@ class TaskUpdateRequest extends FormRequest
             'description' => 'required|string|max:200',
             'status' => 'required|string|in:pending,in_progress,completed',
             'expiration_date' => 'required|date',
+            'user_id' => 'required',
         ];
     }
 }

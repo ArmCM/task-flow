@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\TaskController;
+use App\Policies\TaskPolicy;
 use Core\App;
 use Core\Container;
 use Core\Database;
@@ -14,8 +16,12 @@ $container->singleton('Core\Database', function () {
     return new Database($config);
 });
 
-$container->bind('Core\Request', function () {
+$container->singleton('Core\Request', function () {
     return Request::capture();
+});
+
+$container->bind(TaskController::class, function () {
+    return new TaskController(new TaskPolicy());
 });
 
 App::setContainer($container);

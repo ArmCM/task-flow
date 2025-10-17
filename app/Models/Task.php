@@ -96,6 +96,10 @@ class Task
         if (notEmpty($filters['expiration_date'])) {
             $this->query->where("DATE(expiration_date) = :expiration_date", [':expiration_date' => $filters['expiration_date']]);
         }
+
+        if (notEmpty($filters['user_id'])) {
+            $this->query->where("user_id = :user_id", [':user_id' => $filters['user_id']]);
+        }
     }
 
     protected function sort($value): string

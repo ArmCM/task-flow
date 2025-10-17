@@ -21,7 +21,7 @@ class LoginController
         $jwt = new Jwt();
 
         $token = $jwt->generateToken([
-            'sub' => $user['id'],
+            'user_id' => $user['id'],
             'email' => $user['email']
         ]);
 
