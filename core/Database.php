@@ -11,7 +11,7 @@ class Database
 
     public function __construct($config)
     {
-        $dsn = 'mysql:' . http_build_query($config, '', ';');
+        $dsn = $config['driver'] . http_build_query($config, '', ';');
 
         $this->connection = new PDO($dsn, 'armando', '', [
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
