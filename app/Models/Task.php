@@ -46,11 +46,12 @@ class Task
     public function store(array $data): void
     {
         $this->query->store(
-            'title, description, expiration_date, created_at',
+            'title, description, expiration_date, user_id, created_at',
             [
                 ':title' => $data['title'],
                 ':description' => $data['description'],
                 ':expiration_date' => Carbon::parse($data['expiration_date'])->format('Y-m-d H:i:s'),
+                ':user_id' => $data['user_id'],
                 ':created_at' => Carbon::now()->toDateTimeString()
             ]
         );
@@ -63,6 +64,7 @@ class Task
                 description = :description,
                 status = :status,
                 expiration_date = :expiration_date,
+                user_id = :user_id,
                 updated_at = :updated_at',
             [
                 ':id' => $id,
@@ -70,6 +72,7 @@ class Task
                 ':description' => $data['description'],
                 ':status' => $data['status'],
                 ':expiration_date' => Carbon::parse($data['expiration_date'])->format('Y-m-d'),
+                ':user_id' => $data['user_id'],
                 ':updated_at' => Carbon::now()->toDateTimeString()
             ]
         );
