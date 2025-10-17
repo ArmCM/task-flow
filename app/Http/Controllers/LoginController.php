@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Auth\Jwt;
 use App\Models\User;
 use Core\App;
 use Core\Request;
@@ -17,6 +18,17 @@ class LoginController
 
         $user = (new User)->find($request['email'], $request['password']);
 
-        $this->ok('find resource', $user);
+        $jwt = new Jwt();
+
+        $token = $jwt->generateToken([
+            'sub' => $user['id'],
+            'email' => $user['email']
+        ]);
+
+        $this->ok('find resource', [
+            'id' => $user['id'],
+            'email' => $user['email'],
+            'token' => $token,
+        ]);
     }
 }

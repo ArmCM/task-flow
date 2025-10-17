@@ -2,10 +2,12 @@
 
 namespace App\Http\Middlewares;
 
+use App\Auth\Jwt;
 use Core\Contracts\MiddlewareInterface;
 use Core\Request;
 use Core\Response;
 use Core\Traits\ApiResponses;
+use Exception;
 
 class AuthMiddleware implements MiddlewareInterface
 {
@@ -22,10 +24,19 @@ class AuthMiddleware implements MiddlewareInterface
             return $next($request);
         }
 
-        $token = $request->authorizationHeader();
+        $authorization = $request->authorizationHeader();
 
-        if ($token !== 'Bearer secret123') {
-            $this->unauthorized('not authorized');
+        if (!$authorization || !str_starts_with($authorization, 'Bearer ')) {
+            $this->unauthorized('Missing or invalid authorization header');
+        }
+
+        $token = str_replace('Bearer ', '', $authorization);
+
+        try {
+            $jwt = new Jwt();
+            $jwt->verifyToken($token);
+        } catch (Exception $exception) {
+            $this->unauthorized($exception->getMessage());
         }
 
         return $next($request);
