@@ -1,5 +1,9 @@
 # TaskFlow API
 
+## Postman link
+
+https://solar-star-213897.postman.co/workspace/TaskFlow~fdfce2f0-b97d-4887-9ca9-d673827ea7b2/collection/22748894-9d4a7f9c-e360-4a47-8535-b04c16e010c9?action=share&creator=22748894&active-environment=22748894-100fa5e6-e6ab-4909-8413-4190525bdbcd
+
 ## 🚀 Local Installation
 
 ### Requirements
@@ -22,15 +26,28 @@ cd task-flow
 
 CREATE DATABASE tasks_flow;
 
+CREATE TABLE IF NOT EXISTS users (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS tasks (
-               id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                title VARCHAR(100) NOT NULL,
-                description TEXT NOT NULL,
-                status ENUM('pending', 'in_progress', 'completed') DEFAULT 'pending',
-                expiration_date DATE,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-            );
+   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    status ENUM('pending', 'in_progress', 'completed') DEFAULT 'pending',
+    expiration_date DATE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+ALTER TABLE tasks ADD COLUMN user_id INT UNSIGNED NULL AFTER expiration_date;
+
+ALTER TABLE tasks ADD CONSTRAINT tasks_user_id_foreign FOREIGN KEY (user_id) REFERENCES users(id);
 ```
 
 ```shell
