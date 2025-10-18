@@ -5,6 +5,8 @@ namespace Core;
 
 final class Request
 {
+    private array $user = [];
+
     public function __construct(
         private array $server,
         private array $get,
@@ -53,5 +55,15 @@ final class Request
     public function authorizationHeader(): string
     {
         return $this->server['HTTP_AUTHORIZATION'] ??= '';
+    }
+
+    public function setUser(array $user): void
+    {
+        $this->user = $user;
+    }
+
+    public function user(): ?array
+    {
+        return $this->user;
     }
 }
