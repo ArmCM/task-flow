@@ -30,5 +30,8 @@
     "require-dev": {
         "psy/psysh": "^0.12.9",
         "phpunit/phpunit": "^12.2"
+    },
+    "scripts": {
+      "test": "vendor/bin/phpunit"
     }
 }

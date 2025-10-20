@@ -14,6 +14,7 @@ class LoginController
 
     public function index()
     {
+        eval(\Psy\sh());
         $request = (App::resolve(Request::class))->json();
 
         $user = (new User)->find($request['email'], $request['password']);
