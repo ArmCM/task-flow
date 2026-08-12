@@ -46,6 +46,9 @@ class TaskController
 
         $requestValidated = TaskStoreRequest::validate($request->json());
 
+        // Ownership always comes from the token, never from the request body.
+        $requestValidated['user_id'] = $request->user()['user_id'];
+
         (new Task)->store($requestValidated);
 
         $this->created('Task created successfully');
@@ -73,6 +76,8 @@ class TaskController
         }
 
         $requestValidated = TaskUpdateRequest::validate($request->json());
+
+        $requestValidated['user_id'] = $request->user()['user_id'];
 
         (new Task)->update($id, $requestValidated);
 

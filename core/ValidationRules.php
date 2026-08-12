@@ -35,14 +35,14 @@ class ValidationRules
 
                 if (str_starts_with($rule, 'min:')) {
                     $min = (int) explode(':', $rule)[1];
-                    if (strlen($value) < $min) {
+                    if (strlen((string) $value) < $min) {
                         $this->errors[$field][] = "The field $field must be at least $min characters";
                     }
                 }
 
                 if (str_starts_with($rule, 'max:')) {
                     $max = (int) explode(':', $rule)[1];
-                    if (strlen($value) > $max) {
+                    if (strlen((string) $value) > $max) {
                         $this->errors[$field][] = "The field $field must be max $max characters";
                     }
                 }
@@ -55,7 +55,7 @@ class ValidationRules
                     }
                 }
 
-                if ($rule === 'date' && !strtotime($value)) {
+                if ($rule === 'date' && !strtotime((string) $value)) {
                     $this->errors[$field][] = "The field $field must be a valid date";
                 }
             }

@@ -19,9 +19,12 @@ class Response {
 
         header('Content-Type: application/json');
 
-        echo json_encode([
-            'error' => $data,
-            'message' => $status,
+        // Arrays arrive already shaped by ApiResponses and are sent as-is. A
+        // bare string only comes from the global exception handler, so it gets
+        // the same error shape ApiResponses builds.
+        echo json_encode(is_array($data) ? $data : [
+            'status' => 'error',
+            'message' => $data,
         ]);
 
         exit;

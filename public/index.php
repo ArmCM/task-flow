@@ -34,6 +34,12 @@ $finalResponse = function (Request $request) use ($router): Response {
 
 try {
     $middleware->process($request, $finalResponse);
-} catch (Exception $exception) {
-    Response::json(data: $exception->getMessage(), status: $exception->getCode());
+} catch (Throwable $exception) {
+    $code = $exception->getCode();
+
+    $status = is_int($code) && $code >= 400 && $code <= 599
+        ? $code
+        : Response::INTERNAL_SERVER_ERROR;
+
+    Response::json(data: $exception->getMessage(), status: $status);
 }

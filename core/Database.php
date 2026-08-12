@@ -11,11 +11,15 @@ class Database
 
     public function __construct($config)
     {
-        $dsn = $config['driver'] . http_build_query($config, '', ';');
-
-        $this->connection = new PDO($dsn, 'armando', '', [
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        ]);
+        $this->connection = new PDO(
+            $config['dsn'],
+            $config['username'] ?? null,
+            $config['password'] ?? null,
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]
+        );
     }
 
     public function query($query, array $params = null ): static
